@@ -1,13 +1,15 @@
 
+
 def input_error(func):
     def wrapper(args):
-
+        if func == add_handler:
+            print(f"Error: {func}")
         try:
             res = func(*args)
         except TypeError as err:
             print(f"Error: {err}")
             res = None
-        except ValueError as err:
+        except ValueError or KeyError or IndexError as err:
             print(f"Handler error: {err}")
             res = None
 
@@ -30,13 +32,13 @@ def hello_handler():
 @input_error
 def change_handler(name,number):
     Contacts[name] = number
-    return f"change name:{name} phone number:{number}"
+    return f"Change name:{name}, phone number:{number}"
 
 
 @input_error
 def phone_handler(name):
     number = Contacts[name]
-    return f"change name:{name} phone number:{number}"
+    return f"Phone number:{number}"
 
 
 
@@ -57,10 +59,8 @@ def main():
         items = user_input.split(" ")
         handler_name, *args = items
 
-        print(handler_name)
-        print(args)
-
-        print(Comands[handler_name](args))
+        if Comands[handler_name](args) is not None:
+            print(Comands[handler_name](args))
 
 
 if __name__ == "__main__":
