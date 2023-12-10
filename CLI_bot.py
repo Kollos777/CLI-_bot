@@ -1,41 +1,56 @@
 
+def input_error(*type_args):
+    def args_parser(func):
+        def wrapper(args):
 
-def input_error(func):
-    def wrapper(args):
-        if func == add_handler:
-            print(f"Error: {func}")
-        try:
-            res = func(*args)
-        except TypeError as err:
-            print(f"Error: {err}")
-            res = None
-        except ValueError or KeyError or IndexError as err:
-            print(f"Handler error: {err}")
-            res = None
+            if len(type_args) != len(args):
+                if len(type_args) == 2:
+                    return "Give me name and phone please"
+                elif len(type_args) == 1:
+                    return "Enter user name"
+                return "Incorrect arguments amount"
 
-        return res
-    return wrapper
+            for i in range(len(type_args)):
+                args[i] = type_args[i](args[i])
+            try:
+                res = func(*args)
+            except TypeError as err:
+                print(f"Error: {err}")
+                res = None
+            except ValueError as err:
+                print(f"Handler error: {err}")
+                res = None
+            except KeyError as err:
+                print(f"Handler error: {err}")
+                res = None
+            except IndexError as err:
+                print(f"Handler error: {err}")
+                res = None
+
+            return res
+        return wrapper
+    return args_parser
 
 
 
-@input_error
+@input_error(str,int)
 def add_handler(name,number):
     Contacts[name] = number
     return f"Add name:{name} phone number:{number}"
 
 
-@input_error
+@input_error()
 def hello_handler():
     return "How can I help you?"
 
 
-@input_error
+@input_error(str,int)
 def change_handler(name,number):
     Contacts[name] = number
     return f"Change name:{name}, phone number:{number}"
 
 
-@input_error
+@input_error(str)
 def phone_handler(name):
     number = Contacts[name]
     return f"Phone number:{number}"
@@ -59,8 +74,11 @@ def main():
         items = user_input.split(" ")
         handler_name, *args = items
 
-        if Comands[handler_name](args) is not None:
+        
+        if Comands.get(handler_name) is not None:
             print(Comands[handler_name](args))
+        else:
+            print("No such command")
 
 
 if __name__ == "__main__":
