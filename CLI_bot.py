@@ -32,9 +32,8 @@ def input_error(*type_args):
     return args_parser
 
 
-
-@input_error(str,int)
-def add_handler(name,number):
+@input_error(str, int)
+def add_handler(name, number):
     Contacts[name] = number
     return f"Add name:{name} phone number:{number}"
 
@@ -44,8 +43,8 @@ def hello_handler():
     return "How can I help you?"
 
 
-@input_error(str,int)
-def change_handler(name,number):
+@input_error(str, int)
+def change_handler(name, number):
     Contacts[name] = number
     return f"Change name:{name}, phone number:{number}"
 
@@ -54,7 +53,6 @@ def change_handler(name,number):
 def phone_handler(name):
     number = Contacts[name]
     return f"Phone number:{number}"
-
 
 
 def main():
@@ -74,7 +72,6 @@ def main():
         items = user_input.split(" ")
         handler_name, *args = items
 
-        
         if Comands.get(handler_name) is not None:
             print(Comands[handler_name](args))
         else:
